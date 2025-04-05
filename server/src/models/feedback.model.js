@@ -7,15 +7,18 @@ const feedbackSchema = new mongoose.Schema(
       ref: "User",
     },
 
-    type: {
-      type: String,
-      enum: ["user", "hospital", "doctor"], // Also fixed "hostpital" typo
-    },
-
     toId: {
       type: mongoose.Schema.Types.ObjectId, // ✅ fixed this line
       ref: "User",
     },
+
+    
+    type: {
+      type: String,
+      enum: ["user", "hospital", "doctor"], // Also fixed "hostpital" typo
+      required:true
+    },
+
 
     feedback: {
       type: String,
