@@ -1,3 +1,4 @@
+
 import { Router } from "express";
 
 import {
@@ -16,3 +17,4 @@ router.post("./cancel-appointment/:id",verifyJWT,cancelAppointment)
 
 
 export default router
+
