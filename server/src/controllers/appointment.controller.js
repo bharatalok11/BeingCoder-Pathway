@@ -4,8 +4,10 @@ export const BookAppointMent = async (req, res) => {
   try {
     const userId = req.user._id;
     const { timing } = req.body;
-    const { doctorId } = req.params;
+    const doctorId = req.params.doctorId?.trim();
 
+
+    console.log({ userId, timing, doctorId });
     if (!userId || !timing || !doctorId) {
       return res.status(400).json({ success: false, message: "Missing fields" });
     }
