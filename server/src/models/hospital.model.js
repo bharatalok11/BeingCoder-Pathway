@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const hosipital=new mongoose.Schema({
+const hosipitalScheama=new mongoose.Schema({
 
         name:{
             type:String,
@@ -12,7 +12,17 @@ const hosipital=new mongoose.Schema({
             type:Object.modle.type,
             required:true
             
+        }],
+
+        patient:[
+            {         
+                    type:Object.modle.type,
+                
         }]
 
 
 })
+
+
+const Hostpital=mongoose.model("Hospital",hosipitalScheama)
+export default Hostpital;
