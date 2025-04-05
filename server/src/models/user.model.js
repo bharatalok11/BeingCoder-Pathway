@@ -11,36 +11,27 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+    },  
+
+    phone:{
+      type:String,
+      require:true,
     },
 
-    auth0Id: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-
-    appliedJobs: [
+    // need to add the ids
+    history: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Job",
+        ref: "",
       },
     ],
 
-    savedJobs: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Job",
-      },
-    ],
+    // rating ----->
 
     role: {
       type: String,
-      enum: ["jobseeker", "recruiter"],
-      default: "jobseeker",
-    },
-
-    resume: {
-      type: String,
+      enum: ["doctor", "patient"],
+      default: "patient",
     },
 
     profilePicture: {
@@ -52,10 +43,7 @@ const userSchema = new mongoose.Schema(
       default: "No bio provided",
     },
 
-    profession: {
-      type: String,
-      default: "Unemployed",
-    },
+   
   },
   { timestamps: true }
 );
