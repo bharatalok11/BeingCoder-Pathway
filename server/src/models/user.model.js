@@ -7,30 +7,35 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+
     email: {
       type: String,
       required: true,
       unique: true,
-    },  
-
-    phone:{
-      type:String,
-      require:true,
+      match: [/^\S+@\S+\.\S+$/, "Please enter a valid email address"],
     },
 
-    password:{
-      type:String,
-      require:true
+    phone: {
+      type: String,
+      required: true,
     },
-    // need to add the ids
+
+    password: {
+      type: String,
+      required: true,
+    },
+
     history: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "",
+        ref: "Appointment", // change this to the actual model name you will reference
       },
     ],
-
-    // rating ----->
 
     role: {
       type: String,
@@ -46,8 +51,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "No bio provided",
     },
-
-   
   },
   { timestamps: true }
 );
