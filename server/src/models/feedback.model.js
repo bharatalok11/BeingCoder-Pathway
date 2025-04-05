@@ -1,26 +1,31 @@
 import mongoose from "mongoose";
 
+const feedbackSchema = new mongoose.Schema(
+  {
+    fromId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
 
-const feedbackSchema=new mongoose.Schema({
+    type: {
+      type: String,
+      enum: ["user", "hospital", "doctor"], // Also fixed "hostpital" typo
+    },
 
-        userId:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User"
-        },
+    toId: {
+      type: mongoose.Schema.Types.ObjectId, // ✅ fixed this line
+      ref: "User",
+    },
 
-        type:{
-            type:String,
-            enum:["user","hostpital","doctor"]
-        },
+    feedback: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-        feedback:{
-            type:String,
+const FeedBack = mongoose.model("Feedback", feedbackSchema);
 
-        }
-
-
-})
-
-const FeedBack=mongoose.model("Feedback",feedbackSchema);
-
- export default FeedBack;
+export default FeedBack;
