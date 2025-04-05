@@ -1,28 +1,23 @@
 import { Router } from "express";
 import { 
-     login, 
-    logout, 
-    register, 
-
+    login,  
+    logout,  
+    register,  
 } from "../controllers/user.controller.js";
-// import {upload} from "../middlewares/multer.middleware.js"
-// import { verifyJWT } from "../middlewares/auth.middleware.js";
 
+import { verifyJWT } from "../middleware/auth.middleware.js";
 
-const router = Router()
+const router = Router();
 
-router.route("/register").post(
-    register
-    )
+// Public Routes
+router.post("/register", register);
+router.post("/login", login);
 
- router.route("/login").post(login)
+// Protected Routes
+router.post("/logout", verifyJWT, logout);
 
+// Future secured routes
+// router.patch("/update-account", verifyJWT, updateAccountDetails);
+// router.post("/updatephoto", upload.single("file"), verifyJWT, updatePhoto);
 
- router.route("/updatephoto").post()
-
-// //secured routes
-// router.route("/logout").post(verifyJWT,  logoutUser)
-
-// router.route("/update-account").patch(verifyJWT, updateAccountDetails)
-
-export default router
+export default router;
