@@ -172,3 +172,12 @@ export const updateProfile = async (req, res) => {
         console.log(error);
     }
 }
+
+
+export {
+    register,
+    login,
+    logout,
+    updateProfile
+
+}
