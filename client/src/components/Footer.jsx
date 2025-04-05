@@ -1,7 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 const Footer = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([
+    {
+      sender: 'assistant',
+      text: 'Hello! How can I assist you today? Feel free to ask any health-related questions or share your concerns.'
+    }
+  ]);
+  const fileInputRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.type === 'application/pdf' || file.type.startsWith('image/')) {
+        setSelectedFile(file);
+        // Add a message to show the attached file
+        setMessages([...messages, {
+          sender: 'user',
+          text: `Attached file: ${file.name}`,
+          isFile: true,
+          fileName: file.name,
+          fileType: file.type
+        }]);
+      } else {
+        alert('Please upload only PDF or image files');
+      }
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (message.trim() || selectedFile) {
+      const newMessages = [...messages];
+      
+      if (message.trim()) {
+        newMessages.push({
+          sender: 'user',
+          text: message
+        });
+      }
+      
+      setMessages(newMessages);
+      setMessage('');
+      setSelectedFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
   return (
     <footer id="footer" className="bg-[#0d1b2a] text-white relative">
@@ -131,13 +186,27 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Floating Chat Button */}
+      {/* Floating Chat Button with continuous animation */}
       {!isChatOpen && (
         <div className="fixed bottom-[20px] left-[50%] transform -translate-x-[50%] z-[50]">
           <button
             onClick={() => setIsChatOpen(true)}
-            className="bg-[#0077B5] hover:bg-[#005f99] text-white px-[20px] py-[15px] rounded-full flex items-center gap-[10px] shadow-lg transition-all duration-[300ms] font-semibold text-xl"
+            className="bg-[#0077B5] hover:bg-[#005f99] text-white px-[20px] py-[15px] rounded-full flex items-center gap-[10px] shadow-lg transition-all duration-[300ms] font-semibold text-xl animate-bounce"
           >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-6 w-6 animate-pulse" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" 
+              />
+            </svg>
             Chat with HealthHive Assistant
           </button>
         </div>
@@ -145,27 +214,150 @@ const Footer = () => {
 
       {/* Chat Window */}
       {isChatOpen && (
-        <div className="fixed bottom-[20px] left-[50%] transform -translate-x-[50%] z-[50] bg-white p-[20px] rounded-lg shadow-xl w-[300px] h-[400px] flex flex-col">
+        <div className="fixed bottom-[20px] left-[50%] transform -translate-x-[50%] z-[50] bg-white rounded-lg shadow-2xl w-[80%] max-w-[1000px] h-[600px] flex flex-col">
           {/* Chat Header */}
-          <header className="flex justify-between items-center border-b pb-[10px] mb-[10px]">
-            <h3 className="text-black font-bold">HealthHive Assistant</h3>
-            <button onClick={() => setIsChatOpen(false)} className="text-black text-2xl leading-none">&times;</button>
+          <header className="flex justify-between items-center bg-[#0077B5] text-white p-4 rounded-t-lg">
+            <div className="flex items-center gap-3">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="h-8 w-8" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" 
+                />
+              </svg>
+              <h3 className="text-xl font-bold">HealthHive Assistant</h3>
+            </div>
+            <button 
+              onClick={() => setIsChatOpen(false)} 
+              className="text-white hover:text-gray-200 transition-colors"
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="h-6 w-6" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </header>
 
           {/* Chat Content */}
-          <div className="flex flex-col gap-[10px] overflow-y-auto flex-grow text-black">
-            <p><strong>Assistant:</strong> How can I assist you today?</p>
-            {/* Add dynamic chat messages here */}
+          <div className="flex-grow overflow-y-auto p-6 bg-gray-50">
+            <div className="space-y-4">
+              {messages.map((msg, index) => (
+                <div key={index} className={`flex items-start gap-2.5 ${msg.sender === 'user' ? 'justify-end' : ''}`}>
+                  <div className={`flex flex-col gap-1 w-full max-w-[80%] ${msg.sender === 'user' ? 'items-end' : ''}`}>
+                    <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                      <span className="text-sm font-semibold text-gray-900">
+                        {msg.sender === 'assistant' ? 'HealthHive Assistant' : 'You'}
+                      </span>
+                    </div>
+                    <div className={`flex flex-col leading-1.5 p-4 border-gray-200 ${
+                      msg.sender === 'assistant' 
+                        ? 'bg-[#0077B5] text-white rounded-e-xl rounded-es-xl' 
+                        : 'bg-gray-100 text-gray-900 rounded-s-xl rounded-ee-xl'
+                    }`}>
+                      {msg.isFile ? (
+                        <div className="flex items-center gap-2">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                          </svg>
+                          <span>{msg.fileName}</span>
+                        </div>
+                      ) : (
+                        <p>{msg.text}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Input Area */}
-          <footer className="mt-auto flex items-center gap-[10px] pt-[10px] border-t">
-            <input
-              type="text"
-              placeholder="Type your message..."
-              className="flex-grow border px-[10px] py-[5px] rounded"
-            />
-            <button className="bg-[#0077B5] hover:bg-[#005f99] text-white px-[10px] py-[5px] rounded-lg">Send</button>
+          <footer className="p-4 bg-white border-t border-gray-200 rounded-b-lg">
+            <div className="flex items-center gap-4">
+              <input 
+                type="file" 
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept=".pdf,image/*"
+                className="hidden"
+              />
+              <button 
+                onClick={() => fileInputRef.current?.click()}
+                className="p-2 text-gray-500 rounded-lg hover:bg-gray-100 transition-colors"
+                title="Attach file (PDF or Image)"
+              >
+                <svg 
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" 
+                  />
+                </svg>
+              </button>
+              
+              <div className="flex-grow relative">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your message..."
+                  className="w-full px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-[#0077B5] focus:border-transparent outline-none text-gray-700 placeholder-gray-500"
+                />
+                {selectedFile && (
+                  <div className="absolute -top-8 left-2 bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                    <span>{selectedFile.name}</span>
+                    <button 
+                      onClick={() => {
+                        setSelectedFile(null);
+                        if (fileInputRef.current) {
+                          fileInputRef.current.value = '';
+                        }
+                      }}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <button 
+                onClick={handleSendMessage}
+                disabled={!message.trim() && !selectedFile}
+                className={`inline-flex justify-center p-2 rounded-full cursor-pointer transition-colors ${
+                  message.trim() || selectedFile
+                    ? 'text-[#0077B5] hover:bg-[#0077B5] hover:text-white'
+                    : 'text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                <svg 
+                  className="w-6 h-6 rotate-90" 
+                  fill="currentColor" 
+                  viewBox="0 0 20 20" 
+                >
+                  <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+                </svg>
+              </button>
+            </div>
           </footer>
         </div>
       )}

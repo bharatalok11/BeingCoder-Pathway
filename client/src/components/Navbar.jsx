@@ -15,6 +15,10 @@ const Navbar = () => {
     setIsOpen(false); // Close mobile menu after clicking
   };
 
+  const handleSwitchToSignup = () => {
+    setShowSignup(true);
+  };
+
   return (
     <>
       <nav className="bg-white shadow-md fixed w-full z-10">
@@ -108,7 +112,7 @@ const Navbar = () => {
       </nav>
 
       {/* Login Modal */}
-      {showLogin && <Login onClose={() => setShowLogin(false)} />}
+      {showLogin && <Login onClose={() => setShowLogin(false)} onSwitchToSignup={handleSwitchToSignup} />}
 
       {/* Signup Modal */}
       {showSignup && <Signup onClose={() => setShowSignup(false)} />}
