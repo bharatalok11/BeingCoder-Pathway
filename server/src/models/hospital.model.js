@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+ import mongoose from "mongoose";
 
 const hosipitalScheama=new mongoose.Schema({
 
@@ -19,6 +19,11 @@ const hosipitalScheama=new mongoose.Schema({
                     type:Object.modle.type,
                 
         }]
+
+        , location:{
+                    type:String,
+                    required:true
+        }
 
 
 })

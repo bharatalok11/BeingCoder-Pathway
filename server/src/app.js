@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import userRouter from "./routers/user.routers.js";
 
 const app = express();
 
@@ -15,12 +14,16 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
-// Routes
-app.use("/api/v1/user", userRouter);
 
-// Default route
-app.use("/", (req, res) => {
-  res.send("hi how are you being coder");
-});
+
+// Routes
+import userRouter from "./routers/user.routers.js";
+import appointmentRouter from "./routers/appointment.router.js"
+
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/appointment",appointmentRouter)
+
+
+
 
 export { app };

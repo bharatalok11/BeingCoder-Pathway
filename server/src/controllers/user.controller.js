@@ -2,6 +2,7 @@
 import User  from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
 
 //import getDataUri from "../utils/datauri.js";
@@ -192,21 +193,111 @@ export const updateProfile = async (req, res) => {
 }
 
 
-const  uploadPhoto=async()=>{
 
+export const getAllDoctor = async (req, res) => {
     try {
-        
+        const users = await User.find({ role: "doctor" });
+
+        res.status(200).json({
+            message: "Data fetched successfully.",
+            users,
+            success: true
+        });
     } catch (error) {
-        
+        console.log(error);
+
+        res.status(404).json({
+            message: "Failed to fetch data.",
+            success: false
+        });
     }
+};
 
 
-}
+export const uploadPhoto = async (req, res) => {
+    try {
+        const userId = req.user._id;
 
-export {
-    register,
-    // login,
-    // logout,
-    // updateProfile
+        if (!userId) {
+            return res.status(400).json({
+                message: "User ID not found",
+                success: false,
+            });
+        }
 
-}
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+                success: false,
+            });
+        }
+
+        const avatarFile = req.files?.avatar?.[0];
+
+        if (!avatarFile) {
+            return res.status(400).json({
+                message: "Avatar file is required",
+                success: false,
+            });
+        }
+
+        const avatarUrl = await uploadOnCloudinary(avatarFile.path); 
+
+        user.avatar = avatarUrl;
+        await user.save();
+
+
+        const createdUser = await User.findById(user._id).select("-password ");
+
+        return res.status(200).json({
+            message: "Avatar uploaded successfully",
+            success: true,
+            user: createdUser,
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Something went wrong",
+            success: false,
+        });
+    }
+};
+
+
+export const getUser = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        if (!userId) {
+            return res.status(400).json({
+                message: "User ID not found",
+                success: false,
+            });
+        }
+
+        const user = await User.findById(userId).select("-password -_id -createdAt -updatedAt");
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+                success: false,
+            });
+        }
+
+        return res.status(200).json({
+            message: "User fetched successfully",
+            success: true,
+            user,
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false,
+        });
+    }
+};
