@@ -2,7 +2,7 @@ import React from 'react';
 
 const HeroVideo = () => {
   return (
-    <section className="py-12 bg-gray-100">
+    <section id="services" className="py-12 bg-gray-100">
       <div className="container mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           {/* Video section */}
