@@ -203,10 +203,3 @@ const  uploadPhoto=async()=>{
 
 }
 
-export {
-    register,
-    // login,
-    // logout,
-    // updateProfile
-
-}

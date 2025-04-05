@@ -2,7 +2,7 @@ import Appointment from "../models/appointment.model.js"; // Update path as need
 
 export const BookAppointMent = async (req, res) => {
   try {
-        const userId=req.user._id
+    const userId = req.user._id;
     const { timing } = req.body;
     const { doctorId } = req.params;
 
@@ -16,7 +16,7 @@ export const BookAppointMent = async (req, res) => {
       timing: new Date(timing)
     });
 
-    if (isAvailable.status === "pending") {
+    if (isAvailable && isAvailable.status === "pending") {
       return res.status(409).json({
         success: false,
         message: "Doctor is already booked at this time",
@@ -27,7 +27,7 @@ export const BookAppointMent = async (req, res) => {
       userId,
       doctorId,
       timing: new Date(timing),
-      status:"pending"
+      status: "pending"
     });
 
     return res.status(201).json({
@@ -35,6 +35,7 @@ export const BookAppointMent = async (req, res) => {
       message: "Appointment booked successfully",
       appointment: newApp,
     });
+
   } catch (error) {
     console.error("Booking Error:", error);
     return res.status(500).json({ success: false, message: "Server Error" });

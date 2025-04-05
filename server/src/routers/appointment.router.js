@@ -9,9 +9,9 @@ import { verifyJWT } from "../middleware/auth.middleware.js";
 
 const router =Router();
 
-router.post("/book-appointment",verifyJWT,BookAppointMent)
+router.post("/book-appointment/:id",verifyJWT,BookAppointMent)
 
-router.post("./cancel-appointment",verifyJWT,cancelAppointment)
+router.post("./cancel-appointment/:id",verifyJWT,cancelAppointment)
 
 
 
