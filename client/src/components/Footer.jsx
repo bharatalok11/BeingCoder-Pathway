@@ -214,13 +214,13 @@ const Footer = () => {
 
       {/* Chat Window */}
       {isChatOpen && (
-        <div className="fixed bottom-[20px] left-[50%] transform -translate-x-[50%] z-[50] bg-white rounded-lg shadow-2xl w-[80%] max-w-[1000px] h-[600px] flex flex-col">
+        <div className="fixed bottom-[20px] left-[50%] transform -translate-x-[50%] z-[50] bg-white rounded-lg shadow-2xl w-[64%] max-w-[800px] h-[480px] flex flex-col">
           {/* Chat Header */}
-          <header className="flex justify-between items-center bg-[#0077B5] text-white p-4 rounded-t-lg">
-            <div className="flex items-center gap-3">
+          <header className="flex justify-between items-center bg-[#0077B5] text-white p-3 rounded-t-lg">
+            <div className="flex items-center gap-2">
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
-                className="h-8 w-8" 
+                className="h-6 w-6" 
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke="currentColor"
@@ -232,7 +232,7 @@ const Footer = () => {
                   d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" 
                 />
               </svg>
-              <h3 className="text-xl font-bold">HealthHive Assistant</h3>
+              <h3 className="text-lg font-bold">HealthHive Assistant</h3>
             </div>
             <button 
               onClick={() => setIsChatOpen(false)} 
@@ -240,7 +240,7 @@ const Footer = () => {
             >
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
-                className="h-6 w-6" 
+                className="h-5 w-5" 
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke="currentColor"
@@ -251,30 +251,30 @@ const Footer = () => {
           </header>
 
           {/* Chat Content */}
-          <div className="flex-grow overflow-y-auto p-6 bg-gray-50">
-            <div className="space-y-4">
+          <div className="flex-grow overflow-y-auto p-4 bg-gray-50">
+            <div className="space-y-3">
               {messages.map((msg, index) => (
-                <div key={index} className={`flex items-start gap-2.5 ${msg.sender === 'user' ? 'justify-end' : ''}`}>
-                  <div className={`flex flex-col gap-1 w-full max-w-[80%] ${msg.sender === 'user' ? 'items-end' : ''}`}>
+                <div key={index} className={`flex items-start gap-2 ${msg.sender === 'user' ? 'justify-end' : ''}`}>
+                  <div className={`flex flex-col gap-1 w-full max-w-[85%] ${msg.sender === 'user' ? 'items-end' : ''}`}>
                     <div className="flex items-center space-x-2 rtl:space-x-reverse">
                       <span className="text-sm font-semibold text-gray-900">
                         {msg.sender === 'assistant' ? 'HealthHive Assistant' : 'You'}
                       </span>
                     </div>
-                    <div className={`flex flex-col leading-1.5 p-4 border-gray-200 ${
+                    <div className={`flex flex-col leading-1.5 p-3 border-gray-200 ${
                       msg.sender === 'assistant' 
                         ? 'bg-[#0077B5] text-white rounded-e-xl rounded-es-xl' 
                         : 'bg-gray-100 text-gray-900 rounded-s-xl rounded-ee-xl'
                     }`}>
                       {msg.isFile ? (
                         <div className="flex items-center gap-2">
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                           </svg>
-                          <span>{msg.fileName}</span>
+                          <span className="text-sm">{msg.fileName}</span>
                         </div>
                       ) : (
-                        <p>{msg.text}</p>
+                        <p className="text-sm">{msg.text}</p>
                       )}
                     </div>
                   </div>
@@ -284,8 +284,8 @@ const Footer = () => {
           </div>
 
           {/* Input Area */}
-          <footer className="p-4 bg-white border-t border-gray-200 rounded-b-lg">
-            <div className="flex items-center gap-4">
+          <footer className="p-3 bg-white border-t border-gray-200 rounded-b-lg">
+            <div className="flex items-center gap-2">
               <input 
                 type="file" 
                 ref={fileInputRef}
@@ -295,11 +295,11 @@ const Footer = () => {
               />
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="p-2 text-gray-500 rounded-lg hover:bg-gray-100 transition-colors"
+                className="p-1.5 text-gray-500 rounded-lg hover:bg-gray-100 transition-colors"
                 title="Attach file (PDF or Image)"
               >
                 <svg 
-                  className="w-6 h-6"
+                  className="w-5 h-5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -320,10 +320,10 @@ const Footer = () => {
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Type your message..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-[#0077B5] focus:border-transparent outline-none text-gray-700 placeholder-gray-500"
+                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-full focus:ring-2 focus:ring-[#0077B5] focus:border-transparent outline-none text-gray-700 placeholder-gray-500"
                 />
                 {selectedFile && (
-                  <div className="absolute -top-8 left-2 bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                  <div className="absolute -top-6 left-2 bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full text-xs flex items-center gap-1">
                     <span>{selectedFile.name}</span>
                     <button 
                       onClick={() => {
@@ -343,14 +343,14 @@ const Footer = () => {
               <button 
                 onClick={handleSendMessage}
                 disabled={!message.trim() && !selectedFile}
-                className={`inline-flex justify-center p-2 rounded-full cursor-pointer transition-colors ${
+                className={`inline-flex justify-center p-1.5 rounded-full cursor-pointer transition-colors ${
                   message.trim() || selectedFile
                     ? 'text-[#0077B5] hover:bg-[#0077B5] hover:text-white'
                     : 'text-gray-400 cursor-not-allowed'
                 }`}
               >
                 <svg 
-                  className="w-6 h-6 rotate-90" 
+                  className="w-5 h-5 rotate-90" 
                   fill="currentColor" 
                   viewBox="0 0 20 20" 
                 >
