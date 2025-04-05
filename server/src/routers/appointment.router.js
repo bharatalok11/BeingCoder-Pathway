@@ -1,3 +1,4 @@
+
 import express, { Router } from "express"
 
 import {
@@ -8,8 +9,14 @@ import {
 import { verifyJWT } from "../middleware/auth.middleware.js";
 
 
-const router=Router();
 
-router.post("/book-appointment",verifyJWT,BookAppointMent)
+const router =Router();
+router.post("/book-appointment/:doctorId", verifyJWT, BookAppointMent)
 
-router.post("/",verifyJWT,cancelAppointment)
+
+router.post("./cancel-appointment/:id",verifyJWT,cancelAppointment)
+
+
+
+export default router
+
