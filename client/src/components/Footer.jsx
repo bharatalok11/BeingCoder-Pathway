@@ -24,7 +24,7 @@ const Footer = () => {
             <ul>
               {['Home', 'Doctors', 'Services'].map((link) => (
                 <li key={link} className="mb-2">
-                  <a href={/${link.toLowerCase()}} className="text-gray-400 hover:text-[#00b4d8] transition duration-300">
+                  <a href={`/${link.toLowerCase()}`} className="text-gray-400 hover:text-[#00b4d8] transition duration-300">
                     {link}
                   </a>
                 </li>
@@ -38,7 +38,7 @@ const Footer = () => {
             <ul>
               {['Emergency Care', 'Preventive Care', 'Specialist Consultations', 'Virtual Visits'].map((service) => (
                 <li key={service} className="mb-2">
-                  <button className="text-gray-400 bg-[#112233] px-4 py-2 rounded-lg hover:bg-[#223344] transition duration-300 text-left">
+                  <button className="text-gray-400 bg-[#112233] px-4 py-2 rounded-lg hover:bg-[#223344] transition duration-300 text-left w-full">
                     {service}
                   </button>
                 </li>
@@ -69,7 +69,7 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ color: social.color }}
-                  className={hover:text-[${social.color}]}
+                  className="hover:underline transition duration-300"
                 >
                   {social.platform}
                 </a>
@@ -98,23 +98,26 @@ const Footer = () => {
 
       {/* Chat Window */}
       {isChatOpen && (
-        <div className="fixed bottom-[20px] left-[50%] transform -translate-x-[50%] z-[50] bg-white p-[20px] rounded-lg shadow-xl w-[300px] h-[400px] overflow-auto">
+        <div className="fixed bottom-[20px] left-[50%] transform -translate-x-[50%] z-[50] bg-white p-[20px] rounded-lg shadow-xl w-[300px] h-[400px] flex flex-col">
           {/* Chat Header */}
           <header className="flex justify-between items-center border-b pb-[10px] mb-[10px]">
-            <h3>HealthHive Assistant</h3>
-            <button onClick={() => setIsChatOpen(false)}>&times;</button>
+            <h3 className="text-black font-bold">HealthHive Assistant</h3>
+            <button onClick={() => setIsChatOpen(false)} className="text-black text-2xl leading-none">&times;</button>
           </header>
 
           {/* Chat Content */}
-          <div className="flex flex-col gap-[10px] overflow-y-auto h-full">
-            {/* Example Messages */}
+          <div className="flex flex-col gap-[10px] overflow-y-auto flex-grow text-black">
             <p><strong>Assistant:</strong> How can I assist you today?</p>
             {/* Add dynamic chat messages here */}
           </div>
 
           {/* Input Area */}
           <footer className="mt-auto flex items-center gap-[10px] pt-[10px] border-t">
-            <input type="text" placeholder="Type your message..." className="flex-grow border px-[10px]" />
+            <input
+              type="text"
+              placeholder="Type your message..."
+              className="flex-grow border px-[10px] py-[5px] rounded"
+            />
             <button className="bg-[#0077B5] hover:bg-[#005f99] text-white px-[10px] py-[5px] rounded-lg">Send</button>
           </footer>
         </div>
