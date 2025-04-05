@@ -24,7 +24,7 @@ const Footer = () => {
             <ul>
               {['Home', 'Doctors', 'Services'].map((link) => (
                 <li key={link} className="mb-2">
-                  <a href={`/${link.toLowerCase()}`} className="text-gray-400 hover:text-[#00b4d8] transition duration-300">
+                  <a href={/${link.toLowerCase()}} className="text-gray-400 hover:text-[#00b4d8] transition duration-300">
                     {link}
                   </a>
                 </li>
@@ -69,7 +69,7 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ color: social.color }}
-                  className={`hover:text-[${social.color}]`}
+                  className={hover:text-[${social.color}]}
                 >
                   {social.platform}
                 </a>
