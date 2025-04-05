@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { 
      login, 
-   // logout, 
+    logout, 
     register, 
 
 } from "../controllers/user.controller.js";
@@ -16,6 +16,9 @@ router.route("/register").post(
     )
 
  router.route("/login").post(login)
+
+
+ router.route("/updatephoto").post()
 
 // //secured routes
 // router.route("/logout").post(verifyJWT,  logoutUser)
