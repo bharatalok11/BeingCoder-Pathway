@@ -248,6 +248,7 @@ export const uploadPhoto = async (req, res) => {
         user.avatar = avatarUrl;
         await user.save();
 
+
         const createdUser = await User.findById(user._id).select("-password ");
 
         return res.status(200).json({
@@ -300,5 +301,8 @@ export const getUser = async (req, res) => {
         });
     }
 };
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> bc4234a376e17da958e4e75e378faeb1327ba05b
