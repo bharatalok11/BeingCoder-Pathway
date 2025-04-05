@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema(
       require:true,
     },
 
+    password:{
+      type:String,
+      require:true
+    },
     // need to add the ids
     history: [
       {
