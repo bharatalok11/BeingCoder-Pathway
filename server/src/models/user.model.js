@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
-    history: [
+    appointmentId: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Appointment", // change this to the actual model name you will reference
