@@ -19,8 +19,6 @@ app.use(cookieParser());
 app.use("/api/v1/user", userRouter);
 
 // Default route
-app.use("/", (req, res) => {
-  res.send("hi how are you being coder");
-});
+
 
 export { app };
