@@ -17,14 +17,6 @@ const Footer = () => {
     if (file) {
       if (file.type === 'application/pdf' || file.type.startsWith('image/')) {
         setSelectedFile(file);
-        // Add a message to show the attached file
-        setMessages([...messages, {
-          sender: 'user',
-          text: `Attached file: ${file.name}`,
-          isFile: true,
-          fileName: file.name,
-          fileType: file.type
-        }]);
       } else {
         alert('Please upload only PDF or image files');
       }
@@ -35,13 +27,16 @@ const Footer = () => {
     if (message.trim() || selectedFile) {
       const newMessages = [...messages];
       
-      if (message.trim()) {
-        newMessages.push({
-          sender: 'user',
-          text: message
-        });
-      }
-      
+      // Create a single message object that includes both text and file if present
+      const newMessage = {
+        sender: 'user',
+        text: message.trim(),
+        isFile: selectedFile ? true : false,
+        fileName: selectedFile?.name,
+        fileType: selectedFile?.type
+      };
+
+      newMessages.push(newMessage);
       setMessages(newMessages);
       setMessage('');
       setSelectedFile(null);
@@ -105,23 +100,39 @@ const Footer = () => {
             {/* Social Media Links - Vertical */}
             <div className="space-y-3">
               <h3 className="text-lg font-semibold mb-4 text-white">Follow Us</h3>
-              {[
-                { platform: 'Facebook', url: 'https://facebook.com/bharatalok11', color: '#3b5998' },
-                { platform: 'Twitter', url: 'https://twitter.com/bharatalok11', color: '#1DA1F2' },
-                { platform: 'Instagram', url: 'https://instagram.com/bharatalok11', color: '#E1306C' },
-                { platform: 'LinkedIn', url: 'https://linkedin.com/in/bharatalok11', color: '#0077B5' },
-              ].map((social) => (
-                <a
-                  key={social.platform}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center text-gray-400 hover:text-[#00b4d8] transition duration-300"
-                >
-                  <span className="mr-2">•</span>
-                  {social.platform}
-                </a>
-              ))}
+              <div className="flex flex-col gap-4">
+                {[
+                  { platform: 'Facebook', url: 'https://facebook.com/bharatalok11', color: '#3b5998' },
+                  { platform: 'Twitter', url: 'https://twitter.com/bharatalok11', color: '#1DA1F2' },
+                  { platform: 'Instagram', url: 'https://instagram.com/bharatalok11', color: '#E1306C' },
+                  { platform: 'LinkedIn', url: 'https://linkedin.com/in/bharatalok11', color: '#0077B5' },
+                ].map((social) => (
+                  <a
+                    key={social.platform}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 text-gray-400 hover:text-white transition duration-300 transform hover:scale-105"
+                    style={{ color: social.color }}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                      {social.platform === 'Facebook' && (
+                        <path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.89 2 1.99 2h8v-6H9v-3h2V9c0-2.2 1.8-4 4-4 1.1 0 2 .9 2 2v3h3l-1 3h-2v6h3c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
+                      )}
+                      {social.platform === 'Twitter' && (
+                        <path d="M22 4.01c-.8.36-1.66.6-2.57.71-.98-.94-2.24-1.53-3.69-1.53-3.57 0-6.48 3.58-5.79 7.09-4.28-.2-8.06-2.27-10.53-5.41-1.07 1.85-.55 4.26 1.34 5.42-.83-.03-1.62-.26-2.3-.64v.06c.03 2.52 1.78 4.67 4.19 5.16-.76.21-1.56.33-2.38.12.68 2.16 2.51 3.74 4.74 3.79-1.72 1.35-3.92 2.15-6.29 1.81 2.16 1.37 4.73 2.16 7.48 2.16 8.97 0 13.93-7.43 13.93-13.86 0-.21 0-.42-.01-.63C21.3 5.72 22 4.92 22 4.01z" />
+                      )}
+                      {social.platform === 'Instagram' && (
+                        <path d="M12 2.17c3.24 0 5.84 2.61 5.84 5.84 0 3.24-2.61 5.84-5.84 5.84-3.24 0-5.84-2.61-5.84-5.84 0-3.24 2.61-5.84 5.84-5.84zm0 9.66c2.13 0 3.83-1.7 3.83-3.83 0-2.13-1.7-3.83-3.83-3.83-2.13 0-3.83 1.7-3.83 3.83 0 2.13 1.7 3.83 3.83 3.83z" />
+                      )}
+                      {social.platform === 'LinkedIn' && (
+                        <path d="M22.23 0H1.77C.79 0 0 .79 0 1.77v20.46C0 23.21.79 24 1.77 24h20.46c.98 0 1.77-.79 1.77-1.77V1.77c0-.98-.79-1.77-1.77-1.77zM7.09 20.45H3.69V9h3.4v11.45zm-1.7-13.2c-1.1 0-1.87-.79-1.87-1.78s.77-1.77 1.87-1.77c1.1 0 1.87.77 1.87 1.77s-.77 1.78-1.87 1.78zM20.45 20.45h-3.4v-5.75c0-1.36-.49-2.29-1.72-2.29-1.17 0-1.87.79-1.87 2.04v6.99h-3.4V9h3.4v2.53c.47-.77 1.31-1.28 2.31-1.28 1.74 0 3.04 1.14 3.04 3.23v6.97z" />
+                      )}
+                    </svg>
+                    <span className="text-sm font-semibold">{social.platform}</span>
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -266,16 +277,15 @@ const Footer = () => {
                         ? 'bg-[#0077B5] text-white rounded-e-xl rounded-es-xl' 
                         : 'bg-gray-100 text-gray-900 rounded-s-xl rounded-ee-xl'
                     }`}>
-                      {msg.isFile ? (
-                        <div className="flex items-center gap-2">
+                      {msg.isFile && (
+                        <div className="flex items-center gap-2 mb-2">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                           </svg>
                           <span className="text-sm">{msg.fileName}</span>
                         </div>
-                      ) : (
-                        <p className="text-sm">{msg.text}</p>
                       )}
+                      {msg.text && <p className="text-sm">{msg.text}</p>}
                     </div>
                   </div>
                 </div>

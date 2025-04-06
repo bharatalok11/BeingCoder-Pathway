@@ -59,7 +59,7 @@ const HeroVideo = () => {
               ))}
             </div>
             
-            <button className="mt-8 bg-blue-600 hover:bg-blue-800 text-white px-6 py-3 rounded-full text-lg font-medium shadow-md transition-all duration-300 flex items-center">
+            <button className="mt-8 bg-[#0077B5] hover:bg-[#005f99] text-white px-6 py-3 rounded-full text-lg font-medium shadow-md transition-all duration-300 flex items-center">
               Try it yourself
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 

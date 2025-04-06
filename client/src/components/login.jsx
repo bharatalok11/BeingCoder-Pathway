@@ -1,91 +1,61 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const Login = ({ onClose, onSwitchToSignup }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+const Login = ({ onClose }) => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
 
-  const validateEmail = (email) => {
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-  };
-
-  const validateForm = () => {
-    let isValid = true;
-    
-    // Reset errors
-    setEmailError('');
-    setPasswordError('');
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
     setError('');
-
-    // Email validation
-    if (!email) {
-      setEmailError('Email is required');
-      isValid = false;
-    } else if (!validateEmail(email)) {
-      setEmailError('Please enter a valid email address');
-      isValid = false;
-    }
-
-    // Password validation
-    if (!password) {
-      setPasswordError('Password is required');
-      isValid = false;
-    } else if (password.length < 6) {
-      setPasswordError('Password must be at least 6 characters');
-      isValid = false;
-    }
-
-    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-
-    setIsLoading(true);
+    setLoading(true);
     setError('');
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Add login logic here
-      console.log('Login attempt with:', { email, password, rememberMe });
-      
-      // For demo purposes, simulate a failed login
-      if (email === 'test@example.com' && password === 'password') {
-        // Successful login
+      const response = await axios.post('/api/v1/user/login', {
+        email: formData.email,
+        password: formData.password
+      }, {
+        withCredentials: true // This is important for handling cookies
+      });
+
+      if (response.data.success) {
+        // Store user data in localStorage or context
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        console.log('Login successful:', response.data);
         onClose();
-      } else {
-        setError('Invalid email or password');
+        // Redirect based on role
+        navigate(response.data.user.role === 'doctor' ? '/doctor-dashboard' : '/patient-dashboard');
       }
     } catch (err) {
-      setError('An error occurred. Please try again.');
-      console.error('Login error:', err);
+      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const handleSwitchToSignup = () => {
+  const handleSignUp = () => {
     onClose();
-    if (onSwitchToSignup) {
-      onSwitchToSignup();
-    }
+    navigate('/signup');
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 relative">
+    <div className="fixed inset-0 bg-gradient-to-br from-[#0077B5] to-[#00A3E0] bg-opacity-90 flex items-center justify-center z-50">
+      <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 max-w-md w-full mx-4 relative shadow-2xl">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -104,7 +74,7 @@ const Login = ({ onClose, onSwitchToSignup }) => {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+          <div className="mb-6 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
             {error}
           </div>
         )}
@@ -117,14 +87,14 @@ const Login = ({ onClose, onSwitchToSignup }) => {
             </label>
             <input
               id="email"
+              name="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={`w-full px-4 py-2 border ${emailError ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-[#0077b6] focus:border-transparent`}
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0077b6] focus:border-transparent"
               placeholder="Enter your email"
               required
             />
-            {emailError && <p className="mt-1 text-sm text-red-600">{emailError}</p>}
           </div>
 
           <div>
@@ -134,10 +104,11 @@ const Login = ({ onClose, onSwitchToSignup }) => {
             <div className="relative">
               <input
                 id="password"
+                name="password"
                 type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={`w-full px-4 py-2 border ${passwordError ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-[#0077b6] focus:border-transparent`}
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0077b6] focus:border-transparent"
                 placeholder="Enter your password"
                 required
               />
@@ -158,33 +129,22 @@ const Login = ({ onClose, onSwitchToSignup }) => {
                 )}
               </button>
             </div>
-            {passwordError && <p className="mt-1 text-sm text-red-600">{passwordError}</p>}
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-[#0077b6] focus:ring-[#0077b6] border-gray-300 rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                Remember me
-              </label>
-            </div>
-            <a href="#" className="text-sm text-[#0077b6] hover:text-[#023e8a]">
+          <div className="flex items-center justify-end">
+            <a href="#" className="text-sm text-[#0077b6] hover:text-[#023e8a] font-medium">
               Forgot password?
             </a>
           </div>
 
           <button
             type="submit"
-            disabled={isLoading}
-            className="w-full bg-[#0077b6] hover:bg-[#023e8a] text-white px-6 py-3 rounded-full font-medium transition duration-300 flex items-center justify-center"
+            disabled={loading}
+            className={`w-full ${
+              loading ? 'bg-gray-400' : 'bg-[#0077b6] hover:bg-[#023e8a]'
+            } text-white px-6 py-3 rounded-full font-medium transition duration-300 flex items-center justify-center`}
           >
-            {isLoading ? (
+            {loading ? (
               <>
                 <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -199,12 +159,12 @@ const Login = ({ onClose, onSwitchToSignup }) => {
 
           <div className="text-center text-sm text-gray-600">
             Don't have an account?{' '}
-            <a 
-              onClick={handleSwitchToSignup} 
-              className="text-[#0077b6] hover:text-[#023e8a] font-medium cursor-pointer"
+            <button 
+              onClick={handleSignUp}
+              className="text-[#0077b6] hover:text-[#023e8a] font-medium border-none bg-transparent p-0"
             >
               Sign up
-            </a>
+            </button>
           </div>
         </form>
       </div>

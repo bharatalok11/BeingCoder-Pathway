@@ -66,13 +66,13 @@ const Navbar = () => {
               <div className="flex items-center space-x-4">
                 <button 
                   onClick={() => setShowLogin(true)}
-                  className="text-[#0077b6] hover:text-[#023e8a] font-medium transition duration-300"
+                  className="border-2 border-[#0077b6] text-[#0077b6] hover:bg-[#0077b6] hover:text-white px-6 py-2 rounded-full font-medium transition duration-300"
                 >
                   Login
                 </button>
                 <button 
                   onClick={() => setShowSignup(true)}
-                  className="bg-[#0077b6] hover:bg-[#023e8a] text-white px-6 py-2 rounded-full font-medium transition duration-300"
+                  className="border-2 border-[#0077b6] text-[#0077b6] hover:bg-[#0077b6] hover:text-white px-6 py-2 rounded-full font-medium transition duration-300"
                 >
                   Sign Up
                 </button>
@@ -92,7 +92,7 @@ const Navbar = () => {
                     setShowLogin(true);
                     setIsOpen(false);
                   }}
-                  className="w-full text-[#0077b6] hover:text-[#023e8a] font-medium transition duration-300 text-center py-2"
+                  className="w-full border-2 border-[#0077b6] text-[#0077b6] hover:bg-[#0077b6] hover:text-white px-6 py-2 rounded-full font-medium transition duration-300"
                 >
                   Login
                 </button>
@@ -101,7 +101,7 @@ const Navbar = () => {
                     setShowSignup(true);
                     setIsOpen(false);
                   }}
-                  className="w-full bg-[#0077b6] hover:bg-[#023e8a] text-white px-6 py-2 rounded-full font-medium transition duration-300"
+                  className="w-full border-2 border-[#0077b6] text-[#0077b6] hover:bg-[#0077b6] hover:text-white px-6 py-2 rounded-full font-medium transition duration-300"
                 >
                   Sign Up
                 </button>
