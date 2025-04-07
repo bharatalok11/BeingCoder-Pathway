@@ -34,7 +34,7 @@ const ChatBot = () => {
 
 const Dashboard = () => {
     return (
-        <div className="flex h-screen bg-[#0077b6]">
+        <div className="flex h-screen bg-gradient-to-t from-[#0077b6] to-transparent">
             {/* Sidebar - 20% */}
             <div className="w-[20%] border-r border-white/20">
                 <Sidebar />
