@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
       setLoading(false);
       navigate('/login');
-      return response.data;
+      
     } catch (error) {
       throw error.response?.data || error;
     } finally {
@@ -39,14 +39,15 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       
-      const response = await api.post("/api/v1/user/login", { email, password, username });
+      const response = await api.post("/api/v1/user/login", { email, password, role});
 
-      console.log("User from API:", response.data.user); // Debugging
+      console.log("User from API:", response.data.user); 
 
-      setUser(response.data.user); // ✅ Update user state
-      console.log("Updated User in Context:", user); // Check if it's updating
-
-      navigate("/profile"); 
+      setUser(response.data.user);
+      console.log("Updated User in Context:", user); 
+     
+     
+      navigate("/dashboard"); 
       return response.data; 
     } catch (error) {
       console.error("Login error:", error);
