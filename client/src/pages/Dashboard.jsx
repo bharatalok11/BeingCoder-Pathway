@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Sidebar from './../components/Dashboard_com/Sidebar';
-import Appointment from './../components/Dashboard_com/Appointment';
-import Bookings from './../components/Dashboard_com/Bookings';
+import Sidebar from '../components/Dashboard/Sidebar';
+import Appointment from '../components/Dashboard/Appointment';
+import Bookings from '../components/Dashboard/Bookings';
 
 const ChatBot = () => {
     return (

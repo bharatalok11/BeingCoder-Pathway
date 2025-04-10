@@ -1,8 +1,8 @@
 import React from 'react'
-import Navbar from '../components/Home_com/Navbar'
-import Hero from '../components/Home_com/Hero'
-import HeroVideo from '../components/Home_com/HeroVideo'
-import Footer from '../components/Home_com/Footer'
+import Navbar from '../components/Home/Navbar'
+import Hero from '../components/Home/Hero'
+import HeroVideo from '../components/Home/HeroVideo'
+import Footer from '../components/Home/Footer'
 
 const Home = () => {
   return (

@@ -4,30 +4,21 @@ import axios from 'axios';
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {   
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const api = axios.create({
-    withCredentials: true,
+    withCredentials: true, // for cookies / sessions
   });
 
-  const register = async (prop) => {
+  // REGISTER
+  const register = async (userData) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await api.post('/api/v1/user/register', {
-        username: prop.username,
-        name: prop.name,
-        email: prop.email,
-        phone: prop.phone,
-        password: prop.password,
-        role: prop.role
-      });
-
-      setLoading(false);
+      await api.post('/api/v1/user/register', userData);
       navigate('/login');
-      
     } catch (error) {
       throw error.response?.data || error;
     } finally {
@@ -35,50 +26,46 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // LOGIN
   const login = async ({ email, password, role }) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      
-      const response = await api.post("/api/v1/user/login", { email, password, role});
-
-      console.log("User from API:", response.data.user); 
-
-      setUser(response.data.user);
-      console.log("Updated User in Context:", user); 
-     
-     
-      navigate("/dashboard"); 
-      return response.data; 
+      const { data } = await api.post('/api/v1/user/login', { email, password, role });
+      setUser(data?.user);
+      navigate('/dashboard');
+      return data;
     } catch (error) {
-      console.error("Login error:", error);
       throw error.response?.data || error;
     } finally {
       setLoading(false);
     }
   };
 
-
-  const currentUser=async(req ,res)=>{
-
+  // GET USER (For persistent login after refresh)
+  const fetchUser = async () => {
+    setLoading(true);
     try {
-
-      const response =await api.get("/api/user/present/user");
-      return response.data?.user 
-      
+      const { data } = await api.get('/api/v1/user/get-user');
+      setUser(data?.user);
+      return data?.user;
     } catch (error) {
-      console.error("Error fetching user:", error);
+      console.error('Error fetching user:', error);
+    } finally {
+      setLoading(false);
     }
+  };
 
+  // AUTO FETCH USER ON PAGE REFRESH (optional)
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
-  }
-
-  // ✅ Check if the user session persists after refresh
- 
   return (
-    <AuthContext.Provider value={{ user, loading, register, login }}>
+    <AuthContext.Provider value={{ user, loading, register, login, fetchUser }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+// Custom Hook for Easy Access
 export const useAuth = () => useContext(AuthContext);
