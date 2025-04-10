@@ -13,15 +13,20 @@ export const AuthProvider = ({ children }) => {
     withCredentials: true,
   });
 
-  const register = async (formData) => {
+  const register = async (prop) => {
     try {
       setLoading(true);
-      const response = await api.post('/api/v1/user/register', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      const response = await api.post('/api/v1/user/register', {
+        username: prop.username,
+        name: prop.name,
+        email: prop.email,
+        phone: prop.phone,
+        password: prop.password,
+        role: prop.role
       });
 
-      navigate('/login');
       setLoading(false);
+      navigate('/login');
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -30,7 +35,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async ({ email, password, username }) => {
+  const login = async ({ email, password, role }) => {
     try {
       setLoading(true);
       
