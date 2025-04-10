@@ -301,8 +301,3 @@ export const getUser = async (req, res) => {
         });
     }
 };
-<<<<<<< HEAD
-
-
-=======
->>>>>>> bc4234a376e17da958e4e75e378faeb1327ba05b
