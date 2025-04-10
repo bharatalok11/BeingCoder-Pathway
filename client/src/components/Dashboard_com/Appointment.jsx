@@ -246,6 +246,7 @@ const Appointment = () => {
             });
             setLocationLoading(false);
           } catch (error) {
+            console.error("Location error:", error);
             setLocationError("Could not fetch location details");
             setLocationLoading(false);
           }
