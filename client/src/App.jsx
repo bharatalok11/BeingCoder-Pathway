@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home'; // Ensure correct path based on your structure
 import Dashboard from './pages/Dashboard';
 
-import AuthProvider from "./Context/User.context.jsx"
+import {AuthProvider} from "./Context/User.context.jsx"
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 
@@ -19,9 +19,11 @@ function App() {
         <Route path="/" element={<Home />} />
        
        
-        <Route path="/dashboard/*" element={<ProtectedRoute>
+        <Route path="/dashboard/*" element={
+          //<ProtectedRoute>
         <Dashboard />
-      </ProtectedRoute>} />
+      //</ProtectedRoute>
+      } />
       </Routes>
 
       </AuthProvider>
