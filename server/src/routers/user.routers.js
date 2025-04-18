@@ -22,7 +22,7 @@ router.post("/login", login);
 router.post("/logout", verifyJWT, logout);
 
 router.post("/upload",verifyJWT,upload.single('avatar'),uploadPhoto)
-router.post("/get-user",verifyJWT,getUser)
+router.get("/get-user", verifyJWT, getUser);
 
 // Future secured routes
 // router.patch("/update-account", verifyJWT, updateAccountDetails);

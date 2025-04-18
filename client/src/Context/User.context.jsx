@@ -2,23 +2,30 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const AuthContext = createContext();
+
+axios.defaults.withCredentials = true;
+
+// User.context.jsx (unchanged context provider)
+export const AuthContext = createContext();
+
+
+const api=axios .create({
+
+  withCredentials:true
+
+});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
-  const api = axios.create({
-    withCredentials: true, // for cookies / sessions
-  });
+ // const api = axios.create({ withCredentials: true });
 
-  // REGISTER
+
   const register = async (userData) => {
     setLoading(true);
     try {
-      await api.post('/api/v1/user/register', userData);
-      navigate('/login');
+      await axios.post(`${api}/api/v1/user/register`, userData);
     } catch (error) {
       throw error.response?.data || error;
     } finally {
@@ -26,13 +33,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // LOGIN
   const login = async ({ email, password, role }) => {
     setLoading(true);
     try {
-      const { data } = await api.post('/api/v1/user/login', { email, password, role });
+      const { data } = await axios.post(`${api}/api/v1/user/login`, { email, password, role });
       setUser(data?.user);
-      navigate('/dashboard');
       return data;
     } catch (error) {
       throw error.response?.data || error;
@@ -41,11 +46,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // GET USER (For persistent login after refresh)
   const fetchUser = async () => {
     setLoading(true);
     try {
-      const { data } = await api.get('/api/v1/user/get-user');
+      const { data } = await axios.get(`${api}/api/v1/user/get-user`, { withCredentials: true });
       setUser(data?.user);
       return data?.user;
     } catch (error) {
@@ -54,12 +58,11 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
-
-  // AUTO FETCH USER ON PAGE REFRESH (optional)
+  
   useEffect(() => {
     fetchUser();
   }, []);
-
+  
   return (
     <AuthContext.Provider value={{ user, loading, register, login, fetchUser }}>
       {children}
@@ -67,5 +70,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom Hook for Easy Access
+// Still exported like this
 export const useAuth = () => useContext(AuthContext);

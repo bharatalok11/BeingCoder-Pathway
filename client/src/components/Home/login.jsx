@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../Context/User.context.jsx';
 
-const Login = ({ onClose }) => {
+const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
+
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    role: ''
   });
-  const [showPassword, setShowPassword] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // Added for toggling password visibility
 
   const handleChange = (e) => {
     setFormData({
@@ -26,20 +30,14 @@ const Login = ({ onClose }) => {
     setError('');
 
     try {
-      const response = await axios.post('/api/v1/user/login', {
+      const response = await login({
         email: formData.email,
-        password: formData.password
-      }, {
-        withCredentials: true // This is important for handling cookies
+        password: formData.password,
+        role: formData.role
       });
 
-      if (response.data.success) {
-        // Store user data in localStorage or context
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        console.log('Login successful:', response.data);
-        onClose();
-        // Redirect based on role
-        navigate(response.data.user.role === 'doctor' ? '/doctor-dashboard' : '/patient-dashboard');
+      if (response?.data?.success) {
+        navigate('/dashboard');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
@@ -49,23 +47,13 @@ const Login = ({ onClose }) => {
   };
 
   const handleSignUp = () => {
-    onClose();
-    navigate('/signup');
+    navigate('/');
   };
 
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-[#0077B5] to-[#00A3E0] bg-opacity-90 flex items-center justify-center z-50">
       <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 max-w-md w-full mx-4 relative shadow-2xl">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
+        
         {/* Header */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
@@ -81,6 +69,7 @@ const Login = ({ onClose }) => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Email Field */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -97,6 +86,7 @@ const Login = ({ onClose }) => {
             />
           </div>
 
+          {/* Password Field */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Password
@@ -105,7 +95,7 @@ const Login = ({ onClose }) => {
               <input
                 id="password"
                 name="password"
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0077b6] focus:border-transparent"
@@ -115,28 +105,34 @@ const Login = ({ onClose }) => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2 text-gray-500 hover:text-gray-700"
+                className="absolute inset-y-0 right-3 flex items-center text-sm text-gray-500"
               >
-                {showPassword ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                  </svg>
-                )}
+                {showPassword ? 'Hide' : 'Show'}
               </button>
             </div>
           </div>
 
-          <div className="flex items-center justify-end">
-            <a href="#" className="text-sm text-[#0077b6] hover:text-[#023e8a] font-medium">
-              Forgot password?
-            </a>
+          {/* Role Dropdown */}
+          <div>
+            <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
+              Role
+            </label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0077b6] focus:border-transparent"
+              required
+            >
+              <option value="">Select Role</option>
+              <option value="patient">Patient</option>
+              <option value="doctor">Doctor</option>
+              {/* Add more roles as needed */}
+            </select>
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
@@ -157,10 +153,12 @@ const Login = ({ onClose }) => {
             )}
           </button>
 
+          {/* Switch to Signup */}
           <div className="text-center text-sm text-gray-600">
             Don't have an account?{' '}
-            <button 
+            <button
               onClick={handleSignUp}
+              type="button"
               className="text-[#0077b6] hover:text-[#023e8a] font-medium border-none bg-transparent p-0"
             >
               Sign up

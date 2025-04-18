@@ -6,7 +6,7 @@ import {
     BookAppointMent,
     cancelAppointment
 
-} from "../controllers/appointment.controller"
+} from "../controllers/appointment.controller.js"
 import { verifyJWT } from "../middleware/auth.middleware.js";
 
 
